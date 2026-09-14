@@ -1,1 +1,68 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Directory & CRM</title>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d6efd">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- HTML2PDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">Bank CRM & Directory</span>
+        </div>
+    </nav>
 
+    <div class="container mt-3" id="main-container">
+        <!-- Dashboard / Directory View -->
+        <div id="directory-view">
+            <input type="text" id="searchInput" class="form-control mb-3" placeholder="खातेदाराचे नाव किंवा ID शोधा..." onkeyup="searchCustomer()">
+            <div id="loading" class="text-center text-primary">डेटा लोड होत आहे... कृपया प्रतीक्षा करा.</div>
+            <div class="list-group" id="customer-list"></div>
+        </div>
+
+        <!-- Customer Profile View (Hidden by default) -->
+        <div id="profile-view" style="display: none;">
+            <button class="btn btn-secondary mb-3" onclick="showDirectory()">⬅ मागे जा (Back)</button>
+            <button class="btn btn-danger mb-3 float-end" onclick="downloadPDF()">PDF डाउनलोड करा</button>
+            
+            <div id="printable-profile" class="card p-3 shadow-sm">
+                <h4 id="p-name" class="text-primary"></h4>
+                <p><strong>Customer ID:</strong> <span id="p-cid"></span> | <strong>A/c No:</strong> <span id="p-acc"></span></p>
+                <hr>
+                <h5>वैयक्तिक व आर्थिक माहिती:</h5>
+                <p><strong>मोबाईल:</strong> <span id="p-mobile"></span> | <strong>ई-मेल:</strong> <span id="p-email"></span></p>
+                <p><strong>व्यवसाय:</strong> <span id="p-occ"></span> | <strong>संस्था/नोकरी:</strong> <span id="p-org"></span></p>
+                <p><strong>पत्ता:</strong> <span id="p-address"></span></p>
+                
+                <hr>
+                <h5>सुचविलेल्या योजना (Recommendations):</h5>
+                <ul id="p-recommendations" class="text-success fw-bold"></ul>
+            </div>
+
+            <div class="mt-4 text-center d-flex justify-content-around flex-wrap gap-2">
+                <a id="btn-call" href="#" class="btn btn-success">📞 Call</a>
+                <a id="btn-sms" href="#" class="btn btn-info text-white">💬 SMS</a>
+                <a id="btn-wa" href="#" target="_blank" class="btn btn-success" style="background-color: #25D366;">📱 WhatsApp</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(() => {
+                console.log("Service Worker Registered");
+            });
+        }
+    </script>
+</body>
+</html>
