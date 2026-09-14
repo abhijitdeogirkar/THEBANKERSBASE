@@ -1,46 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Loan Master CRM</title>
+    <title>Bank CRM & Directory</title>
+    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f766e">
-    <!-- DataTables CSS -->
+    
+    <!-- DataTables & html2pdf -->
     <link rel="stylesheet" href="https://cdn.datatables.net/3.0.3/css/dataTables.dataTables.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="site-header">
-      <a class="brand" href="#" onclick="showPage('home')"> Loan Master</a>
+    <header class="site-header no-print">
+      <a class="brand" href="#" onclick="showPage('home')"> Loan Master CRM</a>
       <nav class="nav">
         <a href="#" onclick="showPage('home')" id="nav-home" class="active">Home</a>
         <a href="#" onclick="showPage('master')" id="nav-master">Customer Master</a>
-        <a href="#" onclick="showPage('products')" id="nav-products">Products</a>
+        <a href="#" onclick="showPage('products')" id="nav-products">Products Helpdesk</a>
       </nav>
     </header>
 
     <main class="page">
         <!-- ================= HOME PAGE ================= -->
         <div id="page-home" class="app-page">
-            <h1>Loan Master</h1>
+            <h1>Welcome to CRM Dashboard</h1>
             <p class="lede">Choose where you want to go.</p>
             <div class="card-grid">
               <a class="route-card" href="#" onclick="showPage('master')">
                 <h2>Customer Master</h2>
-                <p>Manage customer information.</p>
+                <p>Manage customer information & generate reports.</p>
                 <span class="route-card-cta">Go to Customer Master →</span>
               </a>
               <a class="route-card" href="#" onclick="showPage('products')">
                 <h2>Loan Products</h2>
-                <p>Product information and requirements.</p>
-                <span class="route-card-cta">Go to Products →</span>
+                <p>Check product details and required documents.</p>
+                <span class="route-card-cta">Go to Help Desk →</span>
               </a>
             </div>
         </div>
 
-        <!-- ================= MASTER PAGE (Customer List) ================= -->
+        <!-- ================= MASTER PAGE (Customer Directory & Profile) ================= -->
         <div id="page-master" class="app-page" style="display:none;">
+            
+            <!-- LIST VIEW -->
             <div id="customerListView">
                 <div class="customer-page-header">
                     <div>
@@ -61,6 +66,7 @@
                                 <th>ID</th>
                                 <th>Customer Name</th>
                                 <th>Mobile Number</th>
+                                <th>District</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -69,28 +75,80 @@
                 </div>
             </div>
 
-            <!-- CUSTOMER DETAILS VIEW (Hidden inside Master) -->
+            <!-- DETAIL VIEW -->
             <div id="customerDetailView" class="customer-detail-page" style="display: none;">
-                <div class="customer-profile-header">
-                    <button class="back-button" onclick="showCustomerList()"><span>←</span> Back</button>
-                    <div class="customer-heading">
+                
+                <div class="customer-profile-header no-print">
+                    <button class="back-button" onclick="showCustomerList()"><span class="back-icon">←</span> Back to Customers</button>
+                    <button class="btn float-end" style="background:#b91c1c; color:white;" onclick="downloadPDF()">Download PDF Report</button>
+                </div>
+
+                <!-- Printable Area Starts Here -->
+                <div id="printable-profile">
+                    <div class="customer-heading mb-4">
                         <div class="customer-avatar">C</div>
                         <div class="customer-heading-text">
                             <h1 id="detailCustomerName">Customer</h1>
-                            <div class="customer-meta"><span class="customer-id-badge" id="detailCustomerId"></span></div>
+                            <div class="customer-meta">
+                                <span class="customer-id-badge" id="detailCustomerId"></span>
+                                <span class="customer-id-badge" style="background:#ecfdf5; color:#0f766e;" id="detailAccount"></span>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Personal Info -->
+                    <section class="detail-card">
+                        <div class="detail-card-header"><div class="section-icon personal-icon">👤</div><div><h2>Personal Information</h2></div></div>
+                        <div class="detail-grid">
+                            <div class="detail-item"><label>Mobile Number</label><div id="detailMobile"></div></div>
+                            <div class="detail-item"><label>Aadhaar Number</label><div id="detailAadhar"></div></div>
+                            <div class="detail-item"><label>PAN Number</label><div id="detailPan"></div></div>
+                            <div class="detail-item"><label>Date of Birth</label><div id="detailDob"></div></div>
+                            <div class="detail-item"><label>District & Taluka</label><div id="detailLocation"></div></div>
+                        </div>
+                    </section>
+
+                    <!-- Employment -->
+                    <section class="detail-card">
+                        <div class="detail-card-header"><div class="section-icon employment-icon">💼</div><div><h2>Employment Information</h2></div></div>
+                        <div class="detail-grid">
+                            <div class="detail-item"><label>Designation</label><div id="detailDesignation"></div></div>
+                            <div class="detail-item"><label>Organisation</label><div id="detailOrganisation"></div></div>
+                            <div class="detail-item"><label>Retirement Date</label><div id="detailRetirement"></div></div>
+                            <div class="detail-item"><label>Years Remaining</label><div id="detailYearsLeft"></div></div>
+                        </div>
+                    </section>
+
+                    <!-- Property & Vehicles -->
+                    <section class="detail-card">
+                        <div class="detail-card-header"><div class="section-icon property-icon">🏠</div><div><h2>Property, Vehicles & Solar</h2></div></div>
+                        <div class="detail-grid">
+                            <div class="detail-item"><label>Have Home</label><div id="detailHaveHome"></div></div>
+                            <div class="detail-item"><label>Have Car / Bike</label><div id="detailVehicles"></div></div>
+                            <div class="detail-item"><label>Electric Car</label><div id="detailElectricCar"></div></div>
+                            <div class="detail-item"><label>Rooftop Solar</label><div id="detailSolar"></div></div>
+                        </div>
+                    </section>
+
+                    <!-- Recommended Products -->
+                    <section class="detail-card" style="border: 2px solid #0f766e;">
+                        <div class="detail-card-header"><div class="section-icon loan-icon">🎯</div><div><h2>Recommended Products for Customer</h2></div></div>
+                        <div class="detail-grid" style="grid-template-columns: 1fr;">
+                            <div class="detail-item">
+                                <ul id="detailRecommendations" style="color:#0f766e; font-weight:bold; font-size:1.1rem; line-height: 1.8;"></ul>
+                            </div>
+                        </div>
+                    </section>
                 </div>
-                
-                <section class="detail-card">
-                    <div class="detail-card-header">
-                        <div class="section-icon personal-icon">👤</div>
-                        <div><h2>Personal Information</h2><p>Basic details</p></div>
-                    </div>
-                    <div class="detail-grid">
-                        <div class="detail-item"><label>Mobile</label><div id="detailMobile"></div></div>
-                        <div class="detail-item"><label>Aadhaar</label><div id="detailAadhar"></div></div>
-                        <div class="detail-item"><label>PAN</label><div id="detailPan"></div></div>
+                <!-- Printable Area Ends Here -->
+
+                <!-- CRM Action Buttons (Hidden in PDF) -->
+                <section class="detail-card mt-4 no-print" style="background: #f0fdfa;">
+                    <div class="detail-card-header"><div><h2>CRM Actions (संपर्क साधा)</h2></div></div>
+                    <div style="display:flex; gap:15px; flex-wrap:wrap; margin-top: 10px;">
+                        <a id="btn-call" href="#" class="btn" style="background:#0284c7; color:white;">📞 Call</a>
+                        <a id="btn-sms" href="#" class="btn" style="background:#f59e0b; color:white;">💬 SMS</a>
+                        <a id="btn-wa" href="#" target="_blank" class="btn" style="background:#16a34a; color:white;">📱 WhatsApp Document List</a>
                     </div>
                 </section>
             </div>
@@ -98,14 +156,14 @@
 
         <!-- ================= PRODUCTS PAGE ================= -->
         <div id="page-products" class="app-page" style="display:none;">
-            <h1>Products</h1>
-            <p class="lede">Product Details page.</p>
+            <h1>Loan Products Helpdesk</h1>
+            <p class="lede">Check ROI and Required Documents</p>
             <div class="panel">
                 <section class="product-selector">
                     <div id="productChips" class="chips" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
                 </section>
             </div>
-            <div class="panel mt-3">
+            <div class="panel mt-4">
                 <section id="productDetails" class="product-card">
                     <div class="empty-message">Select a product to view details</div>
                 </section>
