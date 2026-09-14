@@ -1,4 +1,4 @@
-const API_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbxP2mIjKw4cr3s4wq7Q7ZHtcMvjoY61TgC4yGhqeNZAwprw-aa88WrbV3k-WSRkfs9aqA/exec"; 
 let customersData = [];
 
 // पेज लोड झाल्यावर डेटा खेचणे (Fetch)
