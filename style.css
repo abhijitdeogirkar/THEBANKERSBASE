@@ -1,0 +1,12 @@
+body {
+    background-color: #f8f9fa;
+}
+.list-group-item {
+    cursor: pointer;
+}
+/* PDF प्रिंट करताना बटन्स येऊ नयेत यासाठी */
+@media print {
+    button, .btn {
+        display: none !important;
+    }
+}
