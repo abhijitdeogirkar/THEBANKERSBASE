@@ -1441,5 +1441,28 @@
     grid-template-columns: 1fr;
   }
 }
+/* जुना CSS तसाच ठेवा आणि सर्वात खाली हे जोडा */
 
+.app-page { width: 100%; }
+
+.float-end { float: right; }
+
+.mb-4 { margin-bottom: 1.5rem; }
+
+.mt-4 { margin-top: 1.5rem; }
+
+/* PDF रिपोर्ट डाउनलोड करताना स्क्रीनवरील बटन्स प्रिंटमध्ये दिसू नयेत यासाठी */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    body, .customer-detail-page {
+        background: white !important;
+    }
+    .detail-card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid;
+    }
+}
 </style>
